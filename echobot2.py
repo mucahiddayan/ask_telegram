@@ -20,6 +20,7 @@ import logging
 import re
 import datetime
 
+from config import *
 #watson imports
 import json
 from watson_developer_cloud import NaturalLanguageUnderstandingV1
@@ -33,7 +34,7 @@ from datetime import datetime
 #wikipedia import
 import wikipedia
 
-gmaps = googlemaps.Client(key='AIzaSyDDQgUHIKCGix4BVxmcMVBT6MvRI7uXhXA')
+gmaps = googlemaps.Client(key=GOOGLE_KEY)
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -49,8 +50,8 @@ LANG,WIKIPEDIA,WATSON = range(3)
 #watson init
 natural_language_understanding = NaturalLanguageUnderstandingV1(
 version='2017-02-27',
-username='8622931c-cfc1-4569-999b-4a17d8bff257',
-password='mXrPjiVwgtE5')
+username=WATSON_USER_NAME,
+password=WATSON_PASSWORD)
 
 
 # Define a few command handlers. These usually take the two arguments bot and
@@ -217,7 +218,7 @@ def googlemap(bot,update):
 
 def main():
     # Create the EventHandler and pass it your bot's token.
-    updater = Updater('449348411:AAGX1uzRXaTxaJGxULZ3vYjnzpR66pOJbn0')
+    updater = Updater(TELEGRAM_TOKEN)
 
     
 
