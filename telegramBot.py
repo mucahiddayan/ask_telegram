@@ -77,7 +77,13 @@ def start(bot, update):
 
 
 def help(bot, update):
-    update.message.reply_text(["/"+x for x in funcs])
+    ret = []
+    for y in ["/"+x for x in funcs]:
+        ret.append([InlineKeyboardButton(y,callback_data=funcs[y[1:]])])
+    #update.message.reply_text(ret)
+    update.message.reply_text("Usable methods",
+                            reply_markup=InlineKeyboardMarkup(ret)
+    )
 
 
 def echo(bot, update):
