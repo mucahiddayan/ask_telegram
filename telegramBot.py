@@ -53,6 +53,21 @@ version='2017-02-27',
 username=WATSON_USER_NAME,
 password=WATSON_PASSWORD)
 
+funcs = {
+         "wikipedia" : "set_wiki_lang",
+         "watson"    : "ask_watson",
+         "wiki_lang" : "change_wiki_lang",
+         "googlemap" : "googlemap_mode",
+         "help"      : "help",
+             }
+
+readmore = {
+        "de" : "weiterlesen",
+        "en" : "readmore",
+        "tr" : "devamini oku",
+}
+
+lang = "en"
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -62,7 +77,7 @@ def start(bot, update):
 
 
 def help(bot, update):
-    update.message.reply_text('Help!')
+    update.message.reply_text(["/"+x for x in funcs])
 
 
 def echo(bot, update):
@@ -70,10 +85,12 @@ def echo(bot, update):
     text = update.message.text
     #print update.message
     
-    if re.search('^(hi)$',text.lower()):
+    if re.search('^(hi|hello|hallo)$',text.lower()):
         update.message.reply_text('Hi '+user.first_name+'\nHow can I help you?')
     elif re.search('^(okay|ok|)$',text.lower()):
         update.message.reply_text('You got it '+user.first_name)
+    elif re.search('^(help)$',text.lower()):
+        help(bot,update)
     elif len(text) < 10:
         update.message.reply_text('The sentence is too short to understand what you want')
     else:
@@ -111,6 +128,7 @@ def set_wiki_lang(bot,update):
     ask_wikipedia(bot,update)
     
 def change_wiki_lang(bot,update):
+    global lang
     lang = update.message.text[11:13].lower()
     print lang
     try:
@@ -132,7 +150,7 @@ def ask_wikipedia(bot, update):
         update.message.reply_text('The Article could not be found in Wikipedia that you are looking for')
         print wep
         return
-    update.message.reply_text(result.content[:300]+'...weiterlesen\n'+result.url)
+    update.message.reply_text(result.content[:300]+'...'+readmore[lang]+'\n'+result.url)
 
 def build_menu(buttons,
                n_cols,
@@ -246,7 +264,11 @@ def main():
     dp.add_handler(CommandHandler("watson", ask_watson))
     dp.add_handler(CommandHandler("wiki_lang", change_wiki_lang))
     dp.add_handler(CommandHandler("googlemap", googlemap_mode))
+    dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CallbackQueryHandler(googlemap))
+
+    
+    
     # dp.add_handler(CommandHandler("wiki_lang",set_wiki_lang))
 
     # on noncommand i.e message - echo the message on Telegram
